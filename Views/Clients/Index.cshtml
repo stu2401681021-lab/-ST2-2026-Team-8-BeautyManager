@@ -1,0 +1,129 @@
+﻿@model IReadOnlyList<BeautyManager.Models.Client>
+
+@{
+    ViewData["Title"] = "Списък с клиенти";
+    string search = ViewBag.Search as string ?? "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-2">Списък с клиенти</h1>
+        <p class="text-muted mb-0">
+            Преглед и търсене на клиенти в BeautyManager
+        </p>
+    </div>
+
+    <a asp-controller="Clients"
+       asp-action="Create"
+       class="btn btn-primary">
+        + Добави клиент
+    </a>
+</div>
+
+
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <form asp-controller="Clients"
+              asp-action="Index"
+              method="get">
+
+            <label class="form-label">
+                Търсене на клиент
+            </label>
+
+            <div class="input-group">
+                <input type="text"
+                       name="search"
+                       value="@search"
+                       class="form-control"
+                       placeholder="Име, телефон, услуга..." />
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Търси
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Изчисти
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="mb-3">
+            Клиенти (@Model.Count)
+        </h5>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Име</th>
+                        <th>Телефон</th>
+                        <th>Имейл</th>
+                        <th>Услуга</th>
+                        <th>Специалист</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6"
+                                class="text-center text-muted py-4">
+
+                                Няма намерени клиенти.
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var client in Model)
+                        {
+                            <tr>
+                                <td>@client.Id</td>
+
+                                <td>
+                                    <strong>@client.Name</strong>
+                                </td>
+
+                                <td>@client.Phone</td>
+
+                                <td>@client.Email</td>
+
+                                <td>
+                                    @(client.Service ?? "-")
+                                </td>
+
+                                <td>
+                                    @(client.Specialist ?? "-")
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>

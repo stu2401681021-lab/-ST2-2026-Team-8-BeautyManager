@@ -1,22 +1,391 @@
-html {
-  font-size: 14px;
-}
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+:root {
+    --bs-primary: #a45b6c;
+    --bs-primary-rgb: 164, 91, 108;
+    --ink: #3b3134;
+    --muted: #817779;
+    --accent: #a45b6c;
+    --accent-dark: #824152;
+    --rose: #f7e8e8;
+    --stroke: #eadedd;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    font-size: 15px;
 }
 
-body {
-  margin-bottom: 60px;
+/* Основен фон */
+body.beauty-app {
+    min-height: 100vh;
+    background: linear-gradient(
+        170deg,
+        #fffcfa 0%,
+        #f9f3f0 55%,
+        #f7f0ee 100%
+    );
+    color: var(--ink);
+    font-family: system-ui, -apple-system,
+                 "Segoe UI", Arial, sans-serif;
+}
+
+/* Навигация */
+.beauty-navbar {
+    background: rgba(255, 253, 251, .96);
+    border-bottom: 1px solid var(--stroke);
+    padding: 14px 0;
+    box-shadow: 0 4px 22px rgba(101, 61, 65, .035);
+}
+
+.beauty-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    color: #352d30 !important;
+    font-size: 1.32rem;
+    font-weight: 750;
+    letter-spacing: -.6px;
+    line-height: 1.05;
+}
+
+.brand-symbol {
+    display: grid;
+    place-items: center;
+    width: 45px;
+    height: 45px;
+    background: #f4e3e4;
+    color: #a75c70;
+    border-radius: 15px;
+    font-size: 29px;
+}
+
+.brand-accent {
+    color: var(--accent);
+}
+
+.brand-subtitle {
+    display: block;
+    font-size: .53rem;
+    letter-spacing: 2.25px;
+    color: #978488;
+    margin-top: 5px;
+    font-weight: 650;
+}
+
+.beauty-navbar .nav-link {
+    color: #716367;
+    font-weight: 570;
+    padding: 9px 12px !important;
+    border-radius: 10px;
+    transition: background .15s, color .15s;
+}
+
+.beauty-navbar .nav-link:hover,
+.beauty-navbar .nav-link:focus {
+    color: #8f465b;
+    background: #f9eff0;
+}
+
+.nav-cta {
+    margin-left: 14px;
+    padding: 9px 17px !important;
+    white-space: nowrap;
+}
+
+/* Приветствен панел */
+.app-container {
+    padding-top: 29px;
+}
+
+.welcome-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 164px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(
+        105deg,
+        #f6e5e6,
+        #f4e9e4 62%,
+        #efe4d9
+    );
+    border: 1px solid #eddad9;
+    border-radius: 22px;
+    padding: 26px 38px;
+    margin-bottom: 29px;
+}
+
+.eyebrow {
+    font-size: .7rem;
+    letter-spacing: 2.1px;
+    font-weight: 750;
+    color: #a15f71;
+}
+
+.welcome-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.55rem, 3vw, 2.35rem);
+    line-height: 1.26;
+    margin: 12px 0 9px;
+    color: #523940;
+}
+
+.welcome-title span {
+    color: #bc8790;
+}
+
+.welcome-banner p {
+    color: #8b7176;
+    margin: 0;
+    font-size: .96rem;
+}
+
+.banner-decoration {
+    font-family: Georgia, serif;
+    font-size: 145px;
+    line-height: 1;
+    color: #ca99a0;
+    opacity: .32;
+    transform: rotate(-15deg);
+    padding-right: 20px;
+}
+
+/* Заглавие */
+.app-main h1,
+.app-main h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    letter-spacing: -.6px;
+    color: #49383d;
+}
+
+.app-main h1 {
+    font-size: 2rem;
+    margin-bottom: 18px;
+}
+
+/* Карти */
+.app-main .card,
+.app-main .table-responsive,
+.app-main form:not(.d-inline):not(.d-flex):not(.row) {
+    border-radius: 18px;
+}
+
+.app-main .card {
+    background: #fffefd;
+    border: 1px solid var(--stroke);
+    box-shadow: 0 9px 30px rgba(99, 58, 66, .045) !important;
+}
+
+.app-main .card-body {
+    padding: 1.4rem;
+}
+
+.app-main form:not(.d-inline):not(.d-flex):not(.row) {
+    max-width: 920px;
+}
+
+/* Таблица с клиенти */
+.app-main .table-responsive {
+    background: #fffefd;
+    border: 1px solid var(--stroke);
+    box-shadow: 0 8px 28px rgba(82, 57, 62, .04);
+}
+
+.app-main .card .table-responsive {
+    border: 0;
+    box-shadow: none;
+    border-radius: 12px;
+}
+
+.app-main .table {
+    margin-bottom: 0;
+    --bs-table-striped-bg: #fdf8f7;
+    --bs-table-hover-bg: #f9eeef;
+}
+
+.app-main .table thead th,
+.app-main .table .table-light {
+    background: #f9eef0 !important;
+    color: #79525c;
+    border-bottom: 1px solid #ecdcdf;
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    padding: 15px 13px;
+}
+
+.app-main .table td {
+    padding: 13px;
+    vertical-align: middle;
+    border-color: #f4e9e7;
+}
+
+.app-main .table a:not(.btn) {
+    color: #9c5368;
+    text-decoration: none;
+    font-weight: 550;
+}
+
+.app-main .table a:hover {
+    text-decoration: underline;
+}
+
+/* Бутони */
+.btn {
+    border-radius: 10px;
+    font-weight: 620;
+    padding: .58rem 1rem;
+}
+
+.btn-primary {
+    background: #a45b6c;
+    border-color: #a45b6c;
+    box-shadow: 0 3px 7px rgba(164, 91, 108, .12);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: #874355;
+    border-color: #874355;
+}
+
+.btn-outline-primary {
+    color: #a45b6c;
+    border-color: #ce9da7;
+}
+
+.btn-outline-primary:hover {
+    background: #a45b6c;
+    border-color: #a45b6c;
+}
+
+.btn-outline-secondary {
+    border-color: #d7c7c6;
+    color: #736567;
+}
+
+/* Полета за въвеждане */
+.form-control,
+.form-select,
+.input-group-text {
+    border-color: #e6d8d6;
+    border-radius: 10px;
+    background-color: #fffefd;
+    padding: .66rem .8rem;
+}
+
+.input-group .input-group-text {
+    background: #faeeef;
+    color: #9c5a69;
+}
+
+.input-group .form-control,
+.input-group .form-select {
+    border-radius: 0 10px 10px 0;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #c991a0;
+    box-shadow: 0 0 0 .2rem rgba(164, 91, 108, .13);
+}
+
+.form-label {
+    font-weight: 640;
+    color: #685359;
+}
+
+/* Търсене и странициране */
+.search-box {
+    max-width: 550px;
+}
+
+.client-actions .btn {
+    white-space: nowrap;
+}
+
+.table-clients th {
+    white-space: nowrap;
+}
+
+.table-clients mark {
+    background: #f6e4a8;
+    padding: 0 .1em;
+}
+
+.page-link {
+    color: #a45b6c;
+    border-color: #eadcda;
+}
+
+.page-item.active .page-link {
+    background: #a45b6c;
+    border-color: #a45b6c;
+}
+
+/* Съобщения */
+.alert-success {
+    background: #edf6ec;
+    color: #3c6548;
+    border-color: #d7e8d6;
+}
+
+/* Footer */
+.beauty-footer {
+    margin-top: 50px;
+    border-top: 1px solid var(--stroke);
+    background: rgba(255, 251, 249, .6);
+}
+
+/* Мобилна версия */
+@media (max-width: 991px) {
+    .beauty-navbar .navbar-collapse {
+        padding-top: 16px;
+    }
+
+    .nav-cta {
+        margin: 10px 0 0;
+        display: inline-block;
+    }
+
+    .welcome-banner {
+        padding: 24px;
+    }
+
+    .banner-decoration {
+        font-size: 94px;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 575px) {
+    .app-container {
+        padding-top: 17px;
+    }
+
+    .welcome-banner {
+        min-height: 130px;
+        padding: 20px;
+        margin-bottom: 22px;
+    }
+
+    .banner-decoration {
+        display: none;
+    }
+
+    .app-main h1 {
+        font-size: 1.65rem;
+    }
+
+    .app-main .card-body {
+        padding: 1rem;
+    }
+
+    .app-main .table {
+        font-size: .89rem;
+    }
+
+    .beauty-brand {
+        font-size: 1.15rem;
+    }
 }
