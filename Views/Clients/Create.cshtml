@@ -1,0 +1,36 @@
+﻿@model BeautyManager.Models.Client
+
+@{
+    ViewData["Title"] = "Нов клиент";
+}
+
+<h1 class="h3 mb-3">Нов клиент</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        @if (TempData["Success"] is string message)
+        {
+            <div class="alert alert-success" role="alert">@message</div>
+        }
+
+        <form asp-action="Create" method="post" novalidate>
+
+            <partial name="_ClientForm" model="Model" />
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Запис
+                </button>
+
+                <button type="reset" class="btn btn-outline-secondary">Изчисти</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

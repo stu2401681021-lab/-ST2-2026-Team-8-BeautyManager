@@ -1,0 +1,49 @@
+﻿@model BeautyManager.Models.Client
+
+<div asp-validation-summary="ModelOnly"
+     class="text-danger mb-3"></div>
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control"
+           placeholder="Въведете име" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Phone" class="form-label"></label>
+    <input asp-for="Phone" class="form-control"
+           placeholder="+359888123456" />
+    <span asp-validation-for="Phone" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Email" class="form-label"></label>
+    <input asp-for="Email" class="form-control"
+           placeholder="example@gmail.com" />
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Service" class="form-label"></label>
+    <select asp-for="Service" class="form-select">
+        <option value="">Изберете услуга</option>
+        <option value="Маникюр">Маникюр</option>
+        <option value="Педикюр">Педикюр</option>
+        <option value="Подстригване">Подстригване</option>
+        <option value="Боядисване">Боядисване</option>
+        <option value="Почистване на лице">
+            Почистване на лице
+        </option>
+        <option value="Миглопластика">Миглопластика</option>
+    </select>
+    <span asp-validation-for="Service" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Specialist" class="form-label"></label>
+    <input asp-for="Specialist" class="form-control"
+           placeholder="Име на специалист" />
+    <span asp-validation-for="Specialist"
+          class="text-danger"></span>
+</div>
