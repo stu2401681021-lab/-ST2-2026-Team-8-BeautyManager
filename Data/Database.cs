@@ -1,19 +1,11 @@
-﻿
-using BeautyManager.Models;
+﻿using BeautyManager.Models;
 using System.Text.RegularExpressions;
 using Microsoft.Data.Sqlite;
 
 namespace BeautyManager.Data;
 
-/// <summary>
-/// Singleton реализация на IDatabase върху локална SQLite БД.
-/// </summary>
 public sealed class Database : IDatabase
 {
-    // =====================================
-    // УЧАСТНИК 1 - SINGLETON DESIGN PATTERN
-    // =====================================
-
     private static readonly object Lock = new();
     private static Database? _instance;
 
@@ -51,14 +43,9 @@ public sealed class Database : IDatabase
         return connection;
     }
 
-    // =====================================
-    // УЧАСТНИК 1 - СЪЗДАВАНЕ НА БАЗАТА
-    // =====================================
-
     private void EnsureCreated()
     {
-        var builder = new SqliteConnectionStringBuilder(
-            _connectionString);
+        var builder = new SqliteConnectionStringBuilder(_connectionString);
 
         var dir = Path.GetDirectoryName(
             Path.GetFullPath(builder.DataSource));
@@ -71,6 +58,7 @@ public sealed class Database : IDatabase
         using var connection = Open();
         using var cmd = connection.CreateCommand();
 
+        // Инициализиране на таблиците Clients и Employees
         cmd.CommandText = """
             CREATE TABLE IF NOT EXISTS Clients (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,6 +68,13 @@ public sealed class Database : IDatabase
                 Email TEXT NOT NULL,
                 Service TEXT NULL,
                 Specialist TEXT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS Employees (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT NOT NULL,
+                Specialty TEXT NULL,
+                Phone TEXT NULL
             );
             """;
 
@@ -107,10 +102,6 @@ public sealed class Database : IDatabase
             string.IsNullOrWhiteSpace(c.Specialist)
                 ? DBNull.Value : c.Specialist.Trim());
     }
-
-    // =====================================
-    // УЧАСТНИК 1 - INSERT
-    // =====================================
 
     public int Add(Client client)
     {
@@ -149,7 +140,6 @@ public sealed class Database : IDatabase
 
         return cmd.ExecuteScalar() is not null;
     }
-
 
     public IReadOnlyList<Client> GetFiltered(string? search)
     {

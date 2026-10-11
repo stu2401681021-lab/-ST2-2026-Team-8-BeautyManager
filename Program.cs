@@ -21,6 +21,7 @@ namespace BeautyManager
 
 
             builder.Services.AddSingleton<IDatabase>(_ => Database.Initialize(connectionString));
+            builder.Services.AddScoped<BeautyManager.Data.RepositoryFactory>();
 
 
 

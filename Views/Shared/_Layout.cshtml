@@ -1,66 +1,48 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bg">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@ViewData["Title"] - BeautyManager</title>
 
-    <link rel="stylesheet"
-          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
 <body class="beauty-app">
 
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light beauty-navbar">
-            <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
 
-                <a class="navbar-brand beauty-brand"
-                   asp-controller="Clients" asp-action="Create">
-                    <span class="brand-symbol">✿</span>
-                    <span>
-                        Beauty<span class="brand-accent">Manager</span>
-                        <small class="brand-subtitle">
-                            SALON MANAGEMENT
-                        </small>
-                    </span>
+                <a class="navbar-brand fw-bold text-primary" asp-controller="Home" asp-action="Index">
+                    🌸 BeautyManager
                 </a>
 
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#nav"
-                        aria-controls="nav"
-                        aria-expanded="false"
-                        aria-label="Меню">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="nav">
-                    <ul class="navbar-nav me-auto">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-3">
                         <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Clients"
-                               asp-action="Create">
-                                Добави клиент
+                            <a class="nav-link text-dark" asp-controller="Clients" asp-action="Index">
+                                Клиенти
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">
+                                Служители
                             </a>
                         </li>
                     </ul>
 
-                    <a class="btn btn-primary btn-sm nav-cta"
-                       asp-controller="Clients"
-                       asp-action="Create">
-                        + Нов клиент
-                    </a>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-primary" asp-controller="Clients" asp-action="Create">
+                            + Нов клиент
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Employees" asp-action="Create">
+                            + Нов служител
+                        </a>
+                    </div>
                 </div>
-
             </div>
         </nav>
     </header>
@@ -79,7 +61,7 @@
                 </div>
 
                 <p>
-                    Управлявай клиентите на своя салон с лекота.
+                    Управлявай клиентите и екипа на своя салон с лекота.
                 </p>
             </div>
 
@@ -92,8 +74,7 @@
 
             @if (TempData["Message"] is string message)
             {
-                <div class="alert alert-success alert-dismissible fade show"
-                     role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @message
                     <button type="button"
                             class="btn-close"
