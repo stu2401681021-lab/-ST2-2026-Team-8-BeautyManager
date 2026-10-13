@@ -1,0 +1,93 @@
+﻿
+@model BeautyManager.Models.Employee
+
+@{
+    ViewData["Title"] = "Редактиране на служител";
+}
+
+<h1 class="mb-3">Редактиране на служител</h1>
+
+<p class="text-muted mb-4">
+    Променете информацията за избрания служител.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-controller="Employees"
+              asp-action="Edit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="Name"
+                       class="form-label">
+                    Име
+                </label>
+
+                <input asp-for="Name"
+                       class="form-control" />
+
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Specialty"
+                       class="form-label">
+                    Специалност
+                </label>
+
+                <input asp-for="Specialty"
+                       class="form-control" />
+
+                <span asp-validation-for="Specialty"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Phone"
+                       class="form-label">
+                    Телефон
+                </label>
+
+                <input asp-for="Phone"
+                       class="form-control" />
+
+                <span asp-validation-for="Phone"
+                      class="text-danger"></span>
+            </div>
+
+
+            <div class="mt-4 d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Запази промените
+                </button>
+
+                <a asp-controller="Employees"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Отказ
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -9,7 +9,7 @@
     <div>
         <h1 class="mb-2">Списък с клиенти</h1>
         <p class="text-muted mb-0">
-            Преглед и търсене на клиенти в BeautyManager
+            Преглед и управление на клиентите в BeautyManager
         </p>
     </div>
 
@@ -45,7 +45,8 @@
                     Търси
                 </button>
 
-                <a asp-action="Index"
+                <a asp-controller="Clients"
+                   asp-action="Index"
                    class="btn btn-outline-secondary">
                     Изчисти
                 </a>
@@ -77,6 +78,7 @@
                         <th>Имейл</th>
                         <th>Услуга</th>
                         <th>Специалист</th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
 
@@ -85,11 +87,9 @@
                     @if (Model.Count == 0)
                     {
                         <tr>
-                            <td colspan="6"
+                            <td colspan="7"
                                 class="text-center text-muted py-4">
-
                                 Няма намерени клиенти.
-
                             </td>
                         </tr>
                     }
@@ -114,6 +114,27 @@
 
                                 <td>
                                     @(client.Specialist ?? "-")
+                                </td>
+
+
+                                <td>
+                                    <div class="d-flex gap-2">
+
+                                        <a asp-controller="Clients"
+                                           asp-action="Edit"
+                                           asp-route-id="@client.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Редактирай
+                                        </a>
+
+                                        <a asp-controller="Clients"
+                                           asp-action="Delete"
+                                           asp-route-id="@client.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            Изтрий
+                                        </a>
+
+                                    </div>
                                 </td>
                             </tr>
                         }

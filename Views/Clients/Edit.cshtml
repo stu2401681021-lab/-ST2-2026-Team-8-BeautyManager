@@ -1,0 +1,55 @@
+﻿@model BeautyManager.Models.Client
+
+@{
+    ViewData["Title"] = "Редактиране на клиент";
+}
+
+<h1 class="mb-3">Редактиране на клиент</h1>
+
+<p class="text-muted mb-4">
+    Променете информацията за избрания клиент.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-controller="Clients"
+              asp-action="Edit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+            <partial name="_ClientForm" model="Model" />
+
+            <div class="mt-4 d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Запази промените
+                </button>
+
+                <a asp-controller="Clients"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Отказ
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

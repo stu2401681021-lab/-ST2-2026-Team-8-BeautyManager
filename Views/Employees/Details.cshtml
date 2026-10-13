@@ -1,0 +1,47 @@
+﻿@model BeautyManager.Models.Employee
+
+@{
+    ViewData["Title"] = "Преглед на служител";
+}
+
+<h1 class="mb-3">Информация за служител</h1>
+
+<p class="text-muted mb-4">
+    Подробна информация за избрания служител.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h4 class="mb-4">@Model.Name</h4>
+
+        <dl class="row">
+            <dt class="col-sm-3">Име</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Специалност</dt>
+            <dd class="col-sm-9">@Model.Specialty</dd>
+
+            <dt class="col-sm-3">Телефон</dt>
+            <dd class="col-sm-9">@Model.Phone</dd>
+        </dl>
+
+        <hr />
+
+        <div class="d-flex gap-2 mt-4">
+            <a asp-controller="Employees"
+               asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+                Редактирай
+            </a>
+
+            <a asp-controller="Employees"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Назад
+            </a>
+        </div>
+
+    </div>
+</div>

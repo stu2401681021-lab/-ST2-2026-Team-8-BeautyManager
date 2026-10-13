@@ -4,14 +4,44 @@
 }
 <h1>Служители</h1>
 <p><a class="btn btn-primary" asp-action="Create">Добави</a></p>
-<form method="get" class="d-flex gap-2 mb-3"><input name="filter" value="@ViewBag.Filter" class="form-control" placeholder="Търсене" /><button class="btn btn-outline-primary">Търси</button><a asp-action="Index" class="btn btn-outline-secondary">Изчисти</a></form>
+<form method="get" class="d-flex gap-2 mb-3">
+	<input name="filter" value="@ViewBag.Filter" class="form-control" placeholder="Търсене" />
+	<button class="btn btn-outline-primary">Търси</button>
+	<a asp-action="Index" class="btn btn-outline-secondary">Изчисти</a>
+</form>
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead><tr><th>Име</th><th>Специалност</th><th>Телефон</th><th>Действия</th></tr></thead>
 		<tbody>
 			@foreach (var item in Model)
 			{
-				<tr><td>@item.Name</td><td>@item.Specialty</td><td>@item.Phone</td><td class="text-nowrap"><a asp-action="Details" asp-route-id="@item.Id">Преглед</a> · <a asp-action="Edit" asp-route-id="@item.Id">Редакция</a> · <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a></td></tr>
+
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Specialty</td>
+                    <td>@item.Phone</td>
+
+                    <td class="text-nowrap">
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            Преглед
+                        </a>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            Редакция
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-danger">
+                            Изтрий
+                        </a>
+                    </td>
+                </tr>
+
 			}
 		</tbody>
 	</table>

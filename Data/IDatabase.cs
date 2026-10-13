@@ -14,4 +14,12 @@ public interface IDatabase
 
 
     IReadOnlyList<Client> GetFiltered(string? search);
+
+    Client? GetById(int id);
+
+
+    bool Update(Client client);
+
+
+    bool Delete(int id);
 }

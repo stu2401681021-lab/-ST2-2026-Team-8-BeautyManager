@@ -1,0 +1,73 @@
+﻿@model BeautyManager.Models.Client
+
+@{
+    ViewData["Title"] = "Изтриване на клиент";
+}
+
+<h1 class="mb-3">Изтриване на клиент</h1>
+
+<p class="text-muted mb-4">
+    Потвърдете изтриването на избрания клиент.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-warning">
+            <strong>Внимание!</strong>
+            Сигурни ли сте, че искате да изтриете
+            този клиент?
+
+            Това действие не може да бъде отменено.
+        </div>
+
+        <h5 class="mb-3">Информация за клиента</h5>
+
+        <dl class="row">
+
+            <dt class="col-sm-3">Име</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Телефон</dt>
+            <dd class="col-sm-9">@Model.Phone</dd>
+
+            <dt class="col-sm-3">Имейл</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Услуга</dt>
+            <dd class="col-sm-9">
+                @(Model.Service ?? "-")
+            </dd>
+
+            <dt class="col-sm-3">Специалист</dt>
+            <dd class="col-sm-9">
+                @(Model.Specialist ?? "-")
+            </dd>
+
+        </dl>
+
+        <hr />
+
+
+        <form asp-controller="Clients"
+              asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Изтрий клиента
+            </button>
+
+            <a asp-controller="Clients"
+               asp-action="Index"
+               class="btn btn-outline-secondary ms-2">
+                Отказ
+            </a>
+
+        </form>
+
+    </div>
+</div>

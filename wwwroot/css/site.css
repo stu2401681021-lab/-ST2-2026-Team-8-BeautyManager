@@ -181,7 +181,8 @@ body.beauty-app {
 }
 
 .app-main form:not(.d-inline):not(.d-flex):not(.row) {
-    max-width: 920px;
+    max-width: 100%;
+    width: 100%;
 }
 
 /* Таблица с клиенти */

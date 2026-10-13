@@ -58,7 +58,7 @@ public sealed class Database : IDatabase
         using var connection = Open();
         using var cmd = connection.CreateCommand();
 
-        // Инициализиране на таблиците Clients и Employees
+
         cmd.CommandText = """
             CREATE TABLE IF NOT EXISTS Clients (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -185,4 +185,84 @@ public sealed class Database : IDatabase
 
         return clients;
     }
+
+
+    //14.10.2026
+    public Client? GetById(int id)
+    {
+        using var connection = Open();
+        using var cmd = connection.CreateCommand();
+
+        cmd.CommandText = """
+            SELECT Id, Name, Phone, Email, Service, Specialist
+            FROM Clients
+            WHERE Id = $id;
+            """;
+
+        cmd.Parameters.AddWithValue("$id", id);
+
+        using var reader = cmd.ExecuteReader();
+
+        if (!reader.Read())
+        {
+            return null;
+        }
+
+        return new Client
+        {
+            Id = reader.GetInt32(0),
+            Name = reader.GetString(1),
+            Phone = reader.GetString(2),
+            Email = reader.GetString(3),
+
+            Service = reader.IsDBNull(4)
+                ? null : reader.GetString(4),
+
+            Specialist = reader.IsDBNull(5)
+                ? null : reader.GetString(5)
+        };
+    }
+
+
+    public bool Update(Client client)
+    {
+        using var connection = Open();
+        using var cmd = connection.CreateCommand();
+
+        cmd.CommandText = """
+            UPDATE Clients
+            SET
+                Name = $name,
+                NameKey = $nameKey,
+                Phone = $phone,
+                Email = $email,
+                Service = $service,
+                Specialist = $specialist
+            WHERE Id = $id;
+            """;
+
+        Bind(cmd, client);
+
+        cmd.Parameters.AddWithValue("$id", client.Id);
+
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
+
+
+    public bool Delete(int id)
+    {
+        using var connection = Open();
+        using var cmd = connection.CreateCommand();
+
+        cmd.CommandText = """
+            DELETE FROM Clients
+            WHERE Id = $id;
+            """;
+
+        cmd.Parameters.AddWithValue("$id", id);
+
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
 }

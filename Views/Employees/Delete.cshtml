@@ -1,0 +1,65 @@
+﻿@model BeautyManager.Models.Employee
+
+@{
+    ViewData["Title"] = "Изтриване на служител";
+}
+
+<h1 class="mb-3">Изтриване на служител</h1>
+
+<p class="text-muted mb-4">
+    Потвърдете изтриването на избрания служител.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-warning">
+            <strong>Внимание!</strong>
+            Сигурни ли сте, че искате да изтриете
+            този служител?
+
+            Това действие не може да бъде отменено.
+        </div>
+
+        <h5 class="mb-4">
+            Информация за служителя
+        </h5>
+
+        <dl class="row">
+
+            <dt class="col-sm-3">Име</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Специалност</dt>
+            <dd class="col-sm-9">@Model.Specialty</dd>
+
+            <dt class="col-sm-3">Телефон</dt>
+            <dd class="col-sm-9">@Model.Phone</dd>
+
+        </dl>
+
+        <hr />
+
+
+        <form asp-controller="Employees"
+              asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Изтрий служителя
+            </button>
+
+            <a asp-controller="Employees"
+               asp-action="Index"
+               class="btn btn-outline-secondary ms-2">
+                Отказ
+            </a>
+
+        </form>
+
+    </div>
+</div>

@@ -1,9 +1,32 @@
 ﻿@model BeautyManager.Models.Employee
+
 @{
-	ViewData["Title"] = "Добави – Служители";
+    ViewData["Title"] = "Добави служител";
 }
-<h1>@ViewData["Title"]</h1>
-<form asp-action="Create" method="post">@Html.AntiForgeryToken()<input type="hidden" asp-for="Id" /><partial name="_EmployeeForm" model="Model" /></form>
+
+<h1 class="mb-4">Добави – Служители</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+
+        <form asp-controller="Employees"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <partial name="_EmployeeForm" model="Model" />
+
+           
+        </form>
+
+    </div>
+</div>
+
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
