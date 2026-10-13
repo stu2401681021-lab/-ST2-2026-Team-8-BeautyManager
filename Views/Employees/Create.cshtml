@@ -1,0 +1,9 @@
+﻿@model BeautyManager.Models.Employee
+@{
+	ViewData["Title"] = "Добави – Служители";
+}
+<h1>@ViewData["Title"]</h1>
+<form asp-action="Create" method="post">@Html.AntiForgeryToken()<input type="hidden" asp-for="Id" /><partial name="_EmployeeForm" model="Model" /></form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
