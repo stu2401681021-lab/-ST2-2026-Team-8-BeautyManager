@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.Rendering;
 using BeautyManager.Data;
 using BeautyManager.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,16 +10,42 @@ namespace BeautyManager.Controllers;
 public class ClientsController : Controller
 {
     private readonly IDatabase _database;
+    private readonly RepositoryFactory _repositories;
 
-    public ClientsController(IDatabase database)
+    public ClientsController(
+        IDatabase database,
+        RepositoryFactory repositories)
     {
         _database = database;
+        _repositories = repositories;
+    }
+    private void LoadServices(string? selectedService = null)
+    {
+        var services = _repositories.Services.GetAll();
+
+        ViewBag.Services = new SelectList(
+            services,
+            nameof(Service.Name),
+            nameof(Service.Name),
+            selectedService);
     }
 
+    private bool ServiceExists(string? serviceName)
+    {
+        if (string.IsNullOrWhiteSpace(serviceName))
+            return false;
+
+        return _repositories.Services.GetAll().Any(s =>
+            string.Equals(
+                s.Name,
+                serviceName,
+                StringComparison.OrdinalIgnoreCase));
+    }
 
     [HttpGet]
     public IActionResult Create()
     {
+        LoadServices();
         return View(new Client());
     }
 
@@ -35,6 +62,13 @@ public class ClientsController : Controller
                     "Вече има клиент с това име.");
             }
 
+            if (!ServiceExists(client.Service))
+            {
+                ModelState.AddModelError(
+                    nameof(Client.Service),
+                    "Моля, избери съществуваща услуга.");
+            }
+
             if (_database.PhoneExists(client.Phone))
             {
                 ModelState.AddModelError(
@@ -45,6 +79,7 @@ public class ClientsController : Controller
 
         if (!ModelState.IsValid)
         {
+            LoadServices(client.Service);
             return View(client);
         }
 
@@ -63,7 +98,7 @@ public class ClientsController : Controller
             ModelState.AddModelError(
                 string.Empty,
                 "Името или телефонът вече се използва.");
-
+            LoadServices(client.Service);
             return View(client);
         }
     }
@@ -90,7 +125,7 @@ public class ClientsController : Controller
         {
             return NotFound();
         }
-
+        LoadServices(client.Service);
         return View(client);
     }
 
@@ -149,7 +184,7 @@ public class ClientsController : Controller
         {
             return NotFound();
         }
-
+        LoadServices(client.Service);
         return View(client);
     }
 
@@ -171,5 +206,6 @@ public class ClientsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+    
 
 }

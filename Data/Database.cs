@@ -76,6 +76,14 @@ public sealed class Database : IDatabase
                 Specialty TEXT NULL,
                 Phone TEXT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS Services (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT NOT NULL,
+                Category TEXT NOT NULL,
+                Price REAL NOT NULL,
+                DurationMinutes INTEGER NOT NULL
+            );
             """;
 
         cmd.ExecuteNonQuery();

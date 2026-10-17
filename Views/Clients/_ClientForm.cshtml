@@ -20,19 +20,20 @@
     <span asp-validation-for="Email" class="text-danger"></span>
 </div>
 
+
 <div class="mb-3">
     <label asp-for="Service" class="form-label">Услуга</label>
-    <select asp-for="Service" id="serviceSelect" class="form-select">
-        <option value="">Изберете услуга</option>
-        <option value="Маникюр">Маникюр</option>
-        <option value="Педикюр">Педикюр</option>
-        <option value="Подстригване">Подстригване</option>
-        <option value="Боядисване">Боядисване</option>
-        <option value="Почистване на лице">Почистване на лице</option>
-        <option value="Миглопластика">Миглопластика</option>
+
+    <select asp-for="Service"
+            asp-items="ViewBag.Services"
+            class="form-select">
+        <option value="">-- Избери услуга --</option>
     </select>
-    <span asp-validation-for="Service" class="text-danger"></span>
+
+    <span asp-validation-for="Service"
+          class="text-danger"></span>
 </div>
+
 
 <div class="mb-3">
     <label asp-for="Specialist" class="form-label">Специалист</label>

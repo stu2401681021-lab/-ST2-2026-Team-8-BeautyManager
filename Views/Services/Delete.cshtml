@@ -1,0 +1,43 @@
+﻿@model BeautyManager.Models.Service
+
+@{
+    ViewData["Title"] = "Изтриване на услуга";
+}
+
+<div class="container mt-4">
+    <h1>Изтриване на услуга</h1>
+
+    <div class="alert alert-warning mt-3">
+        Сигурен ли си, че искаш да изтриеш тази услуга?
+        Това действие не може да бъде отменено.
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+
+            <dl class="row mt-3">
+                <dt class="col-sm-4">Категория</dt>
+                <dd class="col-sm-8">@Model.Category</dd>
+
+                <dt class="col-sm-4">Цена</dt>
+                <dd class="col-sm-8">@Model.Price.ToString("F2") лв.</dd>
+
+                <dt class="col-sm-4">Продължителност</dt>
+                <dd class="col-sm-8">@Model.DurationMinutes мин.</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <button type="submit" class="btn btn-danger">
+            Потвърди изтриването
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Отказ
+        </a>
+    </form>
+</div>

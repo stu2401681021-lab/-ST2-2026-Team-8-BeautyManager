@@ -1,0 +1,41 @@
+﻿@model BeautyManager.Models.Service
+
+@{
+    ViewData["Title"] = "Детайли за услуга";
+}
+
+<div class="container mt-4">
+    <h1>Детайли за услуга</h1>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            Информация за услугата
+        </div>
+
+        <div class="card-body">
+            <h4>@Model.Name</h4>
+
+            <dl class="row mt-4">
+                <dt class="col-sm-4">ID</dt>
+                <dd class="col-sm-8">@Model.Id</dd>
+
+                <dt class="col-sm-4">Категория</dt>
+                <dd class="col-sm-8">@Model.Category</dd>
+
+                <dt class="col-sm-4">Цена</dt>
+                <dd class="col-sm-8">@Model.Price.ToString("F2") €</dd>
+
+                <dt class="col-sm-4">Продължителност</dt>
+                <dd class="col-sm-8">@Model.DurationMinutes минути</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id"
+           class="btn btn-warning">Редактирай</a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">Назад към услугите</a>
+    </div>
+</div>
