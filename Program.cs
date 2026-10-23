@@ -1,4 +1,8 @@
+
 using BeautyManager.Data;
+using BeautyManager.Services;
+using BeautyManager.Configuration;
+
 
 namespace BeautyManager
 {
@@ -9,6 +13,12 @@ namespace BeautyManager
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
+
+            builder.Services.Configure<ExternalApisOptions>(
+                builder.Configuration.GetSection(ExternalApisOptions.SectionName));
+
+            builder.Services.AddHttpClient<IGeminiQueryService, GeminiQueryService>();
+
 
 
             var connectionString = builder.Configuration.GetConnectionString("BeautyDb")
