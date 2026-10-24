@@ -1,0 +1,149 @@
+﻿@model BeautyManager.Models.AiQuestion
+
+@{
+    ViewData["Title"] = "AI асистент";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+
+        <div class="card shadow-sm border-0 mb-4 rounded-4 bg-gradient-soft">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center">
+                        <span class="fs-1 me-3">🤖</span>
+                        <div>
+                            <h2 class="card-title m-0 fw-bold">AI Асистент</h2>
+                            <p class="text-muted mb-0 small">Вашият интелигентен помощник в BeautyManager</p>
+                        </div>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fw-semibold">
+                        ✨ Връзка с езиков модел
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted small fw-semibold">Бързи въпроси за тестване:</label>
+            <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setPrompt('Върни списък с всички предлагани услуги')">
+                    💅 Списък с услуги
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setPrompt('Какви са най-популярните процедури?')">
+                    ⭐ Популярни процедури
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setPrompt('Напиши кратко приветствено съобщение за нов клиент')">
+                    ✉️ Приветствено съобщение
+                </button>
+            </div>
+        </div>
+
+       
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form method="post" asp-action="Index" id="aiForm">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label asp-for="Question" class="form-label fw-bold m-0">Вашият въпрос / Заявка</label>
+                            <span id="charCounter" class="text-muted small">0 символа</span>
+                        </div>
+                        <textarea asp-for="Question" id="questionInput" class="form-control rounded-3 p-3 shadow-none border" rows="4" placeholder="Въведете вашата заявка тук..." oninput="updateCounter()"></textarea>
+                        <span asp-validation-for="Question" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="text-muted small">
+                            🔒 <span>Не въвеждайте лични данни на клиенти (ЕГН, телефони).</span>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="submit" id="submitBtn" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm">
+                                ✨ Попитай AI
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="loadingSpinner" class="mt-3 p-3 bg-light rounded-3 text-primary text-center" style="display:none;">
+                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                        <span class="fw-semibold">AI анализира вашата заявка, моля изчакайте...</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model?.Error))
+        {
+            <div class="alert alert-danger border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 p-3" role="alert">
+                <span class="fs-4">⚠️</span>
+                <div>
+                    <strong class="d-block">Възникна грешка:</strong>
+                    <span>@Model.Error</span>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model?.Answer))
+        {
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-success text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                        <span>💬</span> Отговор от AI
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-light rounded-pill px-3 fw-semibold" onclick="copyAnswer()">
+                        📋 Копирай
+                    </button>
+                </div>
+                <div class="card-body p-4 bg-light">
+                    <div id="aiAnswerText" class="p-3 bg-white rounded-3 border shadow-sm" style="white-space: pre-wrap; font-family: inherit; line-height: 1.6;">@Model.Answer</div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+  
+        function setPrompt(text) {
+            var textarea = document.getElementById('questionInput');
+            textarea.value = text;
+            updateCounter();
+            textarea.focus();
+        }
+
+ 
+        function updateCounter() {
+            var textarea = document.getElementById('questionInput');
+            var counter = document.getElementById('charCounter');
+            counter.innerText = textarea.value.length + ' символа';
+        }
+
+       
+        document.getElementById('aiForm').addEventListener('submit', function (e) {
+            var textarea = document.getElementById('questionInput');
+            if (textarea && textarea.value.trim() !== '') {
+                document.getElementById('loadingSpinner').style.display = 'block';
+                var btn = document.getElementById('submitBtn');
+                btn.classList.add('disabled');
+                btn.innerHTML = 'Зареждане...';
+            }
+        });
+
+       
+        function copyAnswer() {
+            var answerText = document.getElementById('aiAnswerText').innerText;
+            navigator.clipboard.writeText(answerText).then(function () {
+                alert('Отговорът беше копиран успешно!');
+            });
+        }
+
+    
+        document.addEventListener('DOMContentLoaded', updateCounter);
+    </script>
+}

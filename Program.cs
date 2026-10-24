@@ -33,6 +33,10 @@ namespace BeautyManager
             builder.Services.AddSingleton<IDatabase>(_ => Database.Initialize(connectionString));
             builder.Services.AddScoped<BeautyManager.Data.RepositoryFactory>();
 
+            builder.Services.AddHttpClient<BeautyManager.Services.AiAssistant>(client => client.Timeout = TimeSpan.FromSeconds(25));
+
+
+
 
 
             var app = builder.Build();
