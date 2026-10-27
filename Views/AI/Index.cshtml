@@ -85,7 +85,6 @@
                 </div>
             </div>
         }
-
         @if (!string.IsNullOrEmpty(Model?.Answer))
         {
             <div class="card shadow border-0 rounded-4 overflow-hidden">
@@ -93,12 +92,20 @@
                     <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
                         <span>💬</span> Отговор от AI
                     </h5>
-                    <button type="button" class="btn btn-sm btn-light rounded-pill px-3 fw-semibold" onclick="copyAnswer()">
+
+                    <button type="button"
+                            class="btn btn-sm btn-light rounded-pill px-3 fw-semibold"
+                            onclick="copyAnswer()">
                         📋 Копирай
                     </button>
                 </div>
+
                 <div class="card-body p-4 bg-light">
-                    <div id="aiAnswerText" class="p-3 bg-white rounded-3 border shadow-sm" style="white-space: pre-wrap; font-family: inherit; line-height: 1.6;">@Model.Answer</div>
+                    <div id="aiAnswerText"
+                         class="p-3 bg-white rounded-3 border shadow-sm"
+                         style="white-space:pre-wrap;font-family:inherit;line-height:1.6;">
+                        @Model.Answer
+                    </div>
                 </div>
             </div>
         }
@@ -124,16 +131,27 @@
             counter.innerText = textarea.value.length + ' символа';
         }
 
-       
-        document.getElementById('aiForm').addEventListener('submit', function (e) {
+                document.getElementById('aiForm').addEventListener('submit', function (e) {
             var textarea = document.getElementById('questionInput');
+
             if (textarea && textarea.value.trim() !== '') {
                 document.getElementById('loadingSpinner').style.display = 'block';
+
                 var btn = document.getElementById('submitBtn');
                 btn.classList.add('disabled');
                 btn.innerHTML = 'Зареждане...';
             }
         });
+
+        function copyAnswer() {
+            var answerText = document.getElementById('aiAnswerText').innerText;
+
+            navigator.clipboard.writeText(answerText).then(function () {
+                alert('Отговорът беше копиран успешно!');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCounter);
 
        
         function copyAnswer() {
