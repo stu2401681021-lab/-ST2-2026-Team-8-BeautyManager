@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using BeautyManager.Models;
 
 namespace BeautyManager.Validation;
@@ -7,7 +9,6 @@ public static class ServiceValidator
 {
     public static IEnumerable<ValidationResult> Validate(Service service, ValidationContext context)
     {
-       
         if (string.IsNullOrWhiteSpace(service.Name))
         {
             yield return new ValidationResult("Името на услугата е задължително.", new[] { nameof(service.Name) });
@@ -17,7 +18,6 @@ public static class ServiceValidator
             yield return new ValidationResult("Името на услугата трябва да е между 2 и 100 символа.", new[] { nameof(service.Name) });
         }
 
-      
         if (string.IsNullOrWhiteSpace(service.Category))
         {
             yield return new ValidationResult("Категорията е задължителна.", new[] { nameof(service.Category) });
@@ -31,10 +31,19 @@ public static class ServiceValidator
         {
             yield return new ValidationResult("Цената трябва да бъде между 0 и 10 000 лв.", new[] { nameof(service.Price) });
         }
+        else if (decimal.Round(service.Price, 2) != service.Price)
+        {
+            yield return new ValidationResult("Цената може да има най-много два знака след запетаята.", new[] { nameof(service.Price) });
+        }
 
         if (service.DurationMinutes < 1 || service.DurationMinutes > 600)
         {
             yield return new ValidationResult("Продължителността трябва да бъде между 1 и 600 минути.", new[] { nameof(service.DurationMinutes) });
         }
+        else if (service.DurationMinutes % 5 != 0)
+        {
+            yield return new ValidationResult("Продължителността трябва да бъде кратна на 5 минути (напр. 15, 20, 30 или 45 мин).", new[] { nameof(service.DurationMinutes) });
+        }
+
     }
 }
