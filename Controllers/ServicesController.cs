@@ -17,34 +17,11 @@ public sealed class ServicesController : Controller
 
     private SqliteRepository<Service> Repo => _factory.Services;
 
-
-    public IActionResult Index(string? filter, int page = 1, int pageSize = 10)
+    public IActionResult Index(string? filter)
     {
-        int[] allowedSizes = { 5, 10, 25, 50 };
-
-        if (!allowedSizes.Contains(pageSize))
-            pageSize = 10;
-
-        var services = Repo.GetAll(filter).ToList();
-
-        int totalCount = services.Count;
-        int totalPages = Math.Max(1,
-            (int)Math.Ceiling(totalCount / (double)pageSize));
-
-        page = Math.Clamp(page, 1, totalPages);
-
         ViewBag.Filter = filter;
-        ViewBag.Page = page;
-        ViewBag.PageSize = pageSize;
-        ViewBag.TotalPages = totalPages;
-        ViewBag.TotalCount = totalCount;
-
-        return View(services
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList());
+        return View(Repo.GetAll(filter));
     }
-
 
     public IActionResult Details(int id)
     {

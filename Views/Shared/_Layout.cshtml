@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bg">
 <head>
     <meta charset="utf-8" />
@@ -13,168 +12,102 @@
 
 <body class="beauty-app">
 
-    @{
-        bool isHomePage =
-            ViewContext.RouteData.Values["controller"]?.ToString() == "Home"
-            && ViewContext.RouteData.Values["action"]?.ToString() == "Index";
-    }
-
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
 
-                <a class="navbar-brand fw-bold text-primary"
-                   asp-controller="Home"
-                   asp-action="Index">
+                <a class="navbar-brand fw-bold text-primary" asp-controller="Home" asp-action="Index">
                     🌸 BeautyManager
                 </a>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
                     <ul class="navbar-nav flex-grow-1 ms-3">
-
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Clients"
-                               asp-action="Index">
+                            <a class="nav-link text-dark" asp-controller="Clients" asp-action="Index">
                                 Клиенти
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Employees"
-                               asp-action="Index">
+                            <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">
                                 Служители
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Services"
-                               asp-action="Index">
+                            <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">
                                 Услуги
                             </a>
                         </li>
-
+             
                         <li class="nav-item">
-                            <a class="nav-link text-dark fw-bold text-primary"
-                               asp-controller="AI"
-                               asp-action="Index">
+                            <a class="nav-link text-dark fw-bold text-primary" asp-controller="AI" asp-action="Index">
                                 🤖 AI Асистент
                             </a>
                         </li>
-
                     </ul>
 
-                   
-@if (!isHomePage)
-{
-    var currentController =
-        ViewContext.RouteData.Values["controller"]?.ToString();
-
-    <div class="d-flex gap-2">
-
-
-        @if (currentController != "Clients")
-        {
-            <a class="btn btn-outline-primary"
-               asp-controller="Clients"
-               asp-action="Create">
-                + Нов клиент
-            </a>
-        }
-
-
-        @if (currentController != "Employees")
-        {
-            <a class="btn btn-primary"
-               asp-controller="Employees"
-               asp-action="Create">
-                + Нов служител
-            </a>
-        }
-
-
-        @if (currentController != "Services")
-        {
-            <a class="btn btn-outline-primary"
-               asp-controller="Services"
-               asp-action="Create">
-                + Нова услуга
-            </a>
-        }
-
-    </div>
-}
-
-
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-primary" asp-controller="Clients" asp-action="Create">
+                            + Нов клиент
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Employees" asp-action="Create">
+                            + Нов служител
+                        </a>
+                        <a asp-controller="Services" asp-action="Create" class="btn btn-outline-primary ms-2">
+                            + Нова услуга
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
-
-
     <div class="container app-container">
 
+        <div class="welcome-banner">
+            <div>
+                <span class="eyebrow">
+                    ВАШЕТО РАБОТНО ПРОСТРАНСТВО
+                </span>
 
-
-        @if (isHomePage)
-        {
-            <div class="welcome-banner">
-
-                <div>
-                    <span class="eyebrow">
-                        ВАШЕТО РАБОТНО ПРОСТРАНСТВО
-                    </span>
-
-                    <div class="welcome-title">
-                        Организирай красотата с лекота
-                        <span>✦</span>
-                    </div>
-
-                    <p>
-                        Управлявай клиентите и екипа на своя салон с лекота.
-                    </p>
+                <div class="welcome-title">
+                    Организирай красотата с лекота
+                    <span>✦</span>
                 </div>
 
-                <div class="banner-decoration" aria-hidden="true">
-                    ✿
-                </div>
-
+                <p>
+                    Управлявай клиентите и екипа на своя салон с лекота.
+                </p>
             </div>
-        }
+
+            <div class="banner-decoration" aria-hidden="true">
+                ✿
+            </div>
+        </div>
 
         <main role="main" class="pb-4 app-main">
 
             @if (TempData["Message"] is string message)
             {
-                <div class="alert alert-success alert-dismissible fade show"
-                     role="alert">
-
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @message
-
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="alert"
                             aria-label="Затвори">
                     </button>
-
                 </div>
             }
 
             @RenderBody()
 
         </main>
-
     </div>
 
     <footer class="beauty-footer text-muted small py-4 text-center">
         BeautyManager · Team 8
     </footer>
 
-    <script src="~/lib/jquery/dist/js/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
