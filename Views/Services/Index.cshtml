@@ -55,7 +55,7 @@
 <div class="card shadow-sm">
     <div class="card-body">
         <h5 class="mb-3">
-            Услуги (@Model.Count())
+            Услуги (@ViewBag.TotalCount)
         </h5>
 
         <div class="table-responsive">
@@ -131,6 +131,7 @@
                     }
                 </tbody>
             </table>
+            <partial name="_Pagination" />
         </div>
     </div>
 </div>

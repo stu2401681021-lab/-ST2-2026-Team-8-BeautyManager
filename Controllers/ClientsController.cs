@@ -105,15 +105,35 @@ public class ClientsController : Controller
 
 
     [HttpGet]
-    public IActionResult Index(string? search)
+
+    [HttpGet]
+    public IActionResult Index(string? search, int page = 1, int pageSize = 10)
     {
-        
-        var clients = _database.GetFiltered(search);
+        int[] allowedSizes = { 5, 10, 25, 50 };
+
+        if (!allowedSizes.Contains(pageSize))
+            pageSize = 10;
+
+        var clients = _database.GetFiltered(search).ToList();
+
+        int totalCount = clients.Count;
+        int totalPages = Math.Max(1,
+            (int)Math.Ceiling(totalCount / (double)pageSize));
+
+        page = Math.Clamp(page, 1, totalPages);
 
         ViewBag.Search = search;
+        ViewBag.Page = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.TotalCount = totalCount;
 
-        return View(clients);
+        return View(clients
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList());
     }
+
 
 
     [HttpGet]

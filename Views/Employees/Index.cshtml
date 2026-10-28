@@ -2,13 +2,30 @@
 @{
 	ViewData["Title"] = "Служители";
 }
-<h1>Служители</h1>
-<p><a class="btn btn-primary" asp-action="Create">Добави</a></p>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-2">Служители</h1>
+        
+    </div>
+
+    <a asp-controller="Employess"
+       asp-action="Create"
+       class="btn btn-primary">
+        + Добави клиент
+    </a>
+</div>
+
 <form method="get" class="d-flex gap-2 mb-3">
+
 	<input name="filter" value="@ViewBag.Filter" class="form-control" placeholder="Търсене" />
+
 	<button class="btn btn-outline-primary">Търси</button>
+
 	<a asp-action="Index" class="btn btn-outline-secondary">Изчисти</a>
+
 </form>
+
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead><tr><th>Име</th><th>Специалност</th><th>Телефон</th><th>Действия</th></tr></thead>
@@ -39,10 +56,17 @@
                            class="btn btn-sm btn-outline-danger">
                             Изтрий
                         </a>
+                        
                     </td>
+                    
                 </tr>
 
 			}
-		</tbody>
-	</table>
+		
+        </tbody>
+    </table>
+</div>
+
+<div class="px-3 pb-3">
+    <partial name="_Pagination" />
 </div>

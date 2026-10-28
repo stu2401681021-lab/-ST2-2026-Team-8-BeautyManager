@@ -14,8 +14,38 @@ public sealed class EmployeesController : Controller
 	}
 	private SqliteRepository<Employee> Repo => _factory.Employees;
 
-	public IActionResult Index(string? filter) { ViewBag.Filter = filter; return View(Repo.GetAll(filter)); }
-	public IActionResult Details(int id) { var item = Repo.Get(id); return item is null ? NotFound() : View(item); }
+
+    public IActionResult Index(string? filter, int page = 1, int pageSize = 10)
+    {
+        int[] allowedSizes = { 5, 10, 25, 50 };
+
+        if (!allowedSizes.Contains(pageSize))
+            pageSize = 10;
+
+        var employees = Repo.GetAll(filter).ToList();
+
+        int totalCount = employees.Count;
+        int totalPages = Math.Max(1,
+            (int)Math.Ceiling(totalCount / (double)pageSize));
+
+        page = Math.Clamp(page, 1, totalPages);
+
+        ViewBag.Filter = filter;
+        ViewBag.Page = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.TotalCount = totalCount;
+
+        return View(employees
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList());
+    }
+
+    public IActionResult Details(int id) { 
+		var item = Repo.Get(id); 
+		return item is null ? NotFound() : View(item); 
+	}
 	public IActionResult Create() { return View(new Employee()); }
 
 	[HttpPost, ValidateAntiForgeryToken]
