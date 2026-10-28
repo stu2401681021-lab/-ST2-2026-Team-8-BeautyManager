@@ -54,7 +54,7 @@ namespace BeautyManager
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Clients}/{action=Create}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
             app.Services.GetRequiredService<IDatabase>();

@@ -1,8 +1,203 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Начало";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm border-start border-4 border-primary">
+    <div class="container-fluid py-2">
+        <h1 class="display-4 fw-bold">Добре дошли в BeautyManager</h1>
+        <p class="col-md-9 fs-5 text-muted mt-3">
+            Вашето цялостно решение за модерно управление на салона. Организирайте графики, клиенти, служители и услуги с лекота и професионализъм.
+        </p>
+        <div class="d-inline-flex gap-2 mt-3">
+            <a asp-controller="Clients" asp-action="Create" class="btn btn-primary btn-lg px-4 gap-3">+ Нов клиент</a>
+            <a asp-controller="Employees" asp-action="Create" class="btn btn-outline-secondary btn-lg px-4">+ Нов служител</a>
+            <a asp-controller="Services" asp-action="Create" class="btn btn-outline-success btn-lg px-4">+ Нова услуга</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="p-3 bg-white border rounded-4 shadow-sm text-center">
+            <h6 class="text-uppercase text-muted fw-bold small">Активни Клиенти</h6>
+            <h2 class="display-6 fw-bold text-primary my-1">@ViewBag.ClientsCount</h2>
+            <small class="text-success fw-semibold">Регистрирани в базата</small>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3 bg-white border rounded-4 shadow-sm text-center">
+            <h6 class="text-uppercase text-muted fw-bold small">Предлагани Услуги</h6>
+            <h2 class="display-6 fw-bold text-success my-1">@ViewBag.ServicesCount</h2>
+            <small class="text-muted">Активен ценоразпис</small>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3 bg-white border rounded-4 shadow-sm text-center">
+            <h6 class="text-uppercase text-muted fw-bold small">Служители в екипа</h6>
+            <h2 class="display-6 fw-bold text-warning my-1">@ViewBag.EmployeesCount</h2>
+            <small class="text-muted">Активен състав</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 py-2 justify-content-center">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-3">
+            <div class="card-body d-flex flex-column">
+                <h4 class="card-title fw-semibold">База данни с клиенти</h4>
+                <p class="card-text text-muted flex-grow-1">
+                    Управлявайте информацията за вашите клиенти, контакти и история на посещенията на едно място.
+                </p>
+                <a asp-controller="Clients" asp-action="Index" class="btn btn-outline-primary w-100 mt-3">Управление на клиенти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-3">
+            <div class="card-body d-flex flex-column">
+                <h4 class="card-title fw-semibold">Каталог с Услуги</h4>
+                <p class="card-text text-muted flex-grow-1">
+                    Конфигурирайте процедурите, ценоразписа и времетраенето на предлаганите услуги в салона.
+                </p>
+                <a asp-controller="Services" asp-action="Index" class="btn btn-outline-success w-100 mt-3">Каталог на услугите</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-3">
+            <div class="card-body d-flex flex-column">
+                <h4 class="card-title fw-semibold">Екип и Служители</h4>
+                <p class="card-text text-muted flex-grow-1">
+                    Следете специализациите, графиките и заетостта на всеки фризьор и козметик.
+                </p>
+                <a asp-controller="Employees" asp-action="Index" class="btn btn-outline-warning w-100 mt-3">Управление на екипа</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row g-4 my-3">
+    <div class="col-md-7">
+        <div class="p-4 bg-white border rounded-4 shadow-sm h-100">
+            <h4 class="fw-bold mb-3 text-primary">Бърз преглед на работния процес</h4>
+            <p class="text-muted">
+                Добре дошли в централния панел за управление. Използвайте горните бутони за бързо регистриране на нови клиенти, служители и услуги. Всички промени се обновяват автоматично в базата данни.
+            </p>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-semibold">Заетост на графика за днес</span>
+                    <span class="text-primary fw-bold">75%</span>
+                </div>
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Системата работи нормално</span>
+                <small class="text-muted">Последна синхронизация: Днес</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="p-4 bg-light border border-info rounded-4 shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="fw-bold text-info mb-3">💡 Съвет & Бележка за деня</h5>
+                <p class="small text-muted">
+                    Можете да използвате AI Асистента за бързо генериране на справки за най-търсените услуги или натовареността на екипа.
+                </p>
+            </div>
+            <div class="bg-white p-3 rounded-3 border">
+                <small class="fw-bold text-dark d-block mb-1">📌 Бързо напомняне:</small>
+                <small class="text-muted">Проверете графика за утрешните резервации до края на работния ден.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row my-5 py-4 bg-white border rounded-4 shadow-sm text-center">
+    <h3 class="fw-bold mb-4">Защо да изберете BeautyManager?</h3>
+    <div class="col-md-4">
+        <div class="p-2">
+            <h5 class="fw-bold">Бързина и удобство</h5>
+            <p class="text-muted small">Лесно добавяне и намиране на информация само с няколко клика.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-2">
+            <h5 class="fw-bold">Интелигентни анализи</h5>
+            <p class="text-muted small">Възможност за чат с AI асистент за справки и бизнес анализи.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-2">
+            <h5 class="fw-bold">Сигурен достъп</h5>
+            <p class="text-muted small">Всички данни за клиенти и работници са структурирани и защитени.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5 justify-content-center">
+    <div class="col-md-10">
+        <div class="p-4 bg-white border rounded-4 shadow-sm">
+            <h3 class="fw-bold text-center mb-4">Често задавани въпроси </h3>
+            <div class="accordion accordion-flush" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqOne">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            Как да регистрирам нов клиент?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Натиснете синия бутон <strong>"+ Нов клиент"</strong> в горния банер или отидете в меню "Клиенти" и изберете "Добавяне". Попълнете име, телефон и избрана услуга.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqTwo">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            Какво може да прави AI Асистентът?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            AI асистентът може да отговаря на въпроси относно вашата база данни — например кой е най-заетият служител, кои са най-популярните услуги или общият брой записани клиенти.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqThree">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            Как да променя предлаганите услуги и цени?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Отворете секцията <strong>"Каталог с Услуги"</strong> и използвайте опциите за добавяне или редактиране на процедурите и техните цени.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 bg-dark text-white rounded-4 shadow-lg mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h3 class="fw-bold text-info mb-2">AI Асистент за вашия бизнес</h3>
+            <p class="mb-0 text-light opacity-75">
+                Имате въпроси за данните, натовареността или посещенията? Задайте вашите въпроси директно на нашия AI.
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a asp-controller="Ai" asp-action="Index" class="btn btn-info btn-lg px-4 text-white fw-semibold">Започни разговор</a>
+        </div>
+    </div>
 </div>

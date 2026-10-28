@@ -1,5 +1,4 @@
-﻿
-using BeautyManager.Models;
+﻿using BeautyManager.Models;
 
 namespace BeautyManager.Data;
 
@@ -11,6 +10,9 @@ public sealed class RepositoryFactory
     {
         _db = (Database)db;
     }
+
+    public SqliteRepository<Client> Clients =>
+        new(_db, "Clients", "Name", "Phone", "Email", "Service", "Specialist");
 
     public SqliteRepository<Service> Services =>
         new(_db, "Services", "Name", "Category", "Price", "DurationMinutes");
