@@ -1,5 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text.Json;
+using System.Linq;
+using BeautyManager.Data;
 using BeautyManager.Models;
 using BeautyManager.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +11,12 @@ namespace BeautyManager.Controllers;
 public sealed class AIController : Controller
 {
     private readonly IGeminiQueryService _gemini;
+    private readonly RepositoryFactory _repositoryFactory;
 
-    public AIController(IGeminiQueryService gemini)
+    public AIController(IGeminiQueryService gemini, RepositoryFactory repositoryFactory)
     {
         _gemini = gemini;
+        _repositoryFactory = repositoryFactory;
     }
 
     [HttpGet]
@@ -34,15 +38,25 @@ public sealed class AIController : Controller
 
         try
         {
-            model.Answer = await _gemini.GenerateAnswerAsync(
-                model.Question,
-                ct);
+            var services = _repositoryFactory.Services.GetAll();
+            var employees = _repositoryFactory.Employees.GetAll();
+
+            var servicesList = string.Join("\n", services.Select(s => $"- {s.Name} ({s.Category}): {s.Price} лв., времетраене: {s.DurationMinutes} мин."));
+            var employeesList = string.Join("\n", employees.Select(e => $"- {e.Name} - {e.Specialty} (Тел: {e.Phone})"));
+
+            string promptWithContext =
+                "Ти си любезен и полезен асистент на салон за красота 'BeautyManager'.\n" +
+                "Отговаряй подредено, структурирано и изчерпателно на български език, като използваш следната актуална информация от базата данни:\n\n" +
+                $"ПРЕДЛАГАНИ УСЛУГИ:\n{servicesList}\n\n" +
+                $"ЕКИП И СПЕЦИАЛИСТИ:\n{employeesList}\n\n" +
+                $"Запитване от клиент: {model.Question}";
+
+            model.Answer = await _gemini.GenerateAnswerAsync(promptWithContext, ct);
         }
         catch (OperationCanceledException)
             when (!ct.IsCancellationRequested)
         {
-            model.Error =
-                "Заявката към Gemini изтече по време. Опитай отново.";
+            model.Error = "Заявката към Gemini изтече по време. Опитай отново.";
         }
         catch (OperationCanceledException)
         {

@@ -22,4 +22,8 @@ public interface IDatabase
 
 
     bool Delete(int id);
+
+    IReadOnlyList<Service> GetAllServices();
+
+    IReadOnlyList<Employee> GetAllEmployees();
 }

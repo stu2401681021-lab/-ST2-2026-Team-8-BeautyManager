@@ -20,7 +20,6 @@ public sealed class GeminiQueryService : IGeminiQueryService
         _options = options.Value;
     }
 
-    // Обикновен текстов отговор от Gemini
     public async Task<string> GenerateAnswerAsync(
         string userQuery,
         CancellationToken cancellationToken = default)
@@ -34,11 +33,9 @@ public sealed class GeminiQueryService : IGeminiQueryService
 
         const string systemInstruction = """
             Ти си AI асистент на BeautyManager — система за салон за красота.
-            Отговаряй на български език, ясно и естествено.
-            За обикновени въпроси отговаряй кратко, обикновено в 2-4 изречения.
-            Когато потребителят поиска текст, създай готов за употреба текст.
-            Не измисляй услуги, цени, клиенти или свободни часове.
-            Ако е необходима информация от базата данни, не представяй предположения като факти.
+            Отговаряй на български език, ясно, подредено и изчерпателно.
+            Когато потребителят поиска списък с услуги, цени или служители, предостави пълната налична информация.
+            Не измисляй услуги, цени, клиенти или свободни часове извън предоставената ти информация.
             """;
 
         return await GenerateContentAsync(
@@ -48,7 +45,6 @@ public sealed class GeminiQueryService : IGeminiQueryService
             cancellationToken);
     }
 
-    // Генериране на JSON заявка към базата данни
     public async Task<GeminiQueryResult> GenerateJsonQueryAsync(
         string userQuery,
         CancellationToken cancellationToken = default)
@@ -144,7 +140,6 @@ public sealed class GeminiQueryService : IGeminiQueryService
         }
     }
 
-    // Общ метод за изпращане на заявка към Gemini
     private async Task<string> GenerateContentAsync(
         string systemInstruction,
         string userQuery,
@@ -168,13 +163,13 @@ public sealed class GeminiQueryService : IGeminiQueryService
             ? new
             {
                 temperature = 0.1,
-                maxOutputTokens = 512,
+                maxOutputTokens = 1024,
                 responseMimeType = "application/json"
             }
             : new
             {
                 temperature = 0.7,
-                maxOutputTokens = 256
+                maxOutputTokens = 2048
             };
 
         var requestBody = new
@@ -204,25 +199,40 @@ public sealed class GeminiQueryService : IGeminiQueryService
             "https://generativelanguage.googleapis.com/" +
             $"v1beta/models/{_options.Model}:generateContent";
 
-        using var request = new HttpRequestMessage(
-            HttpMethod.Post,
-            url);
+        int maxRetries = 3;
+        HttpResponseMessage? response = null;
 
-        request.Headers.Add(
-            "x-goog-api-key",
-            _options.ApiKey);
-
-        request.Content = JsonContent.Create(requestBody);
-
-        using var response = await _httpClient.SendAsync(
-            request,
-            cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
         {
-            var errorDetails =
-                await response.Content.ReadAsStringAsync(
-                    cancellationToken);
+            using var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                url);
+
+            request.Headers.Add("x-goog-api-key", _options.ApiKey);
+            request.Content = JsonContent.Create(requestBody);
+
+            response = await _httpClient.SendAsync(request, cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                break;
+            }
+
+            if ((int)response.StatusCode == 503 || (int)response.StatusCode == 429)
+            {
+                if (attempt == maxRetries) break;
+                await Task.Delay(1500 * attempt, cancellationToken);
+                continue;
+            }
+
+            break;
+        }
+
+        if (response == null || !response.IsSuccessStatusCode)
+        {
+            var errorDetails = response != null
+                ? await response.Content.ReadAsStringAsync(cancellationToken)
+                : "No response";
 
             if (errorDetails.Length > 1500)
             {
@@ -231,30 +241,26 @@ public sealed class GeminiQueryService : IGeminiQueryService
 
             throw new HttpRequestException(
                 $"Gemini върна HTTP " +
-                $"{(int)response.StatusCode} " +
-                $"({response.ReasonPhrase}). " +
+                $"{(response != null ? (int)response.StatusCode : 0)} " +
+                $"({response?.ReasonPhrase}). " +
                 $"Подробности: {errorDetails}");
         }
 
         using var document = await JsonDocument.ParseAsync(
-            await response.Content.ReadAsStreamAsync(
-                cancellationToken),
+            await response.Content.ReadAsStreamAsync(cancellationToken),
             cancellationToken: cancellationToken);
 
-        if (!document.RootElement.TryGetProperty(
-                "candidates", out var candidates) ||
+        if (!document.RootElement.TryGetProperty("candidates", out var candidates) ||
             candidates.ValueKind != JsonValueKind.Array ||
             candidates.GetArrayLength() == 0)
         {
             throw new InvalidOperationException(
-                "Gemini не върна отговор. " +
-                "Провери заявката и настройките на модела.");
+                "Gemini не върна отговор. Провери заявката и настройките на модела.");
         }
 
         var candidate = candidates[0];
 
-        if (!candidate.TryGetProperty(
-                "content", out var content) ||
+        if (!candidate.TryGetProperty("content", out var content) ||
             !content.TryGetProperty("parts", out var parts) ||
             parts.ValueKind != JsonValueKind.Array)
         {
@@ -289,10 +295,11 @@ public sealed class GeminiQueryService : IGeminiQueryService
 
         return answer;
     }
+
     public async IAsyncEnumerable<string> GenerateAnswerStreamAsync(
-    string userQuery,
-    [EnumeratorCancellation]
-    CancellationToken cancellationToken = default)
+        string userQuery,
+        [EnumeratorCancellation]
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(userQuery))
             throw new ArgumentException("Въпросът не може да бъде празен.");
@@ -304,10 +311,10 @@ public sealed class GeminiQueryService : IGeminiQueryService
             throw new InvalidOperationException("Не е конфигуриран Gemini модел.");
 
         const string systemInstruction = """
-        Ти си AI асистент на BeautyManager — система за салон за красота.
-        Отговаряй на български език, ясно и кратко, обикновено в 2-4 изречения.
-        Не измисляй услуги, цени, клиенти или свободни часове.
-        """;
+            Ти си AI асистент на BeautyManager — система за салон за красота.
+            Отговаряй на български език, ясно и подредено.
+            Не измисляй услуги, цени, клиенти или свободни часове.
+            """;
 
         var requestBody = new
         {
@@ -317,16 +324,16 @@ public sealed class GeminiQueryService : IGeminiQueryService
             },
             contents = new[]
             {
-            new
-            {
-                role = "user",
-                parts = new[] { new { text = userQuery } }
-            }
-        },
+                new
+                {
+                    role = "user",
+                    parts = new[] { new { text = userQuery } }
+                }
+            },
             generationConfig = new
             {
                 temperature = 0.7,
-                maxOutputTokens = 256
+                maxOutputTokens = 2048
             }
         };
 
