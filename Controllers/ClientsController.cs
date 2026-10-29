@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using BeautyManager.Data;
 using BeautyManager.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +18,7 @@ public class ClientsController : Controller
         _database = database;
         _repositories = repositories;
     }
+
     private void LoadServices(string? selectedService = null)
     {
         var services = _repositories.Services.GetAll();
@@ -40,6 +40,30 @@ public class ClientsController : Controller
                 s.Name,
                 serviceName,
                 StringComparison.OrdinalIgnoreCase));
+    }
+
+    [HttpGet]
+    public IActionResult Index(string? search, int page = 1, int pageSize = 10)
+    {
+        var allClients = _database.GetFiltered(search);
+
+        int totalItems = allClients.Count;
+        int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+        var pagedClients = allClients
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.Search = search;
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalItems = totalItems;
+
+        return View(pagedClients);
     }
 
     [HttpGet]
@@ -87,13 +111,11 @@ public class ClientsController : Controller
         {
             _database.Add(client);
 
-            TempData["Success"] =
-                "Клиентът е добавен успешно!";
+            TempData["Success"] = "Клиентът е добавен успешно!";
 
             return RedirectToAction(nameof(Create));
         }
-        catch (SqliteException ex)
-            when (ex.SqliteErrorCode == 19)
+        catch (SqliteException ex) when (ex.SqliteErrorCode == 19)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -102,19 +124,6 @@ public class ClientsController : Controller
             return View(client);
         }
     }
-
-
-    [HttpGet]
-    public IActionResult Index(string? search)
-    {
-        
-        var clients = _database.GetFiltered(search);
-
-        ViewBag.Search = search;
-
-        return View(clients);
-    }
-
 
     [HttpGet]
     public IActionResult Edit(int id)
@@ -125,10 +134,10 @@ public class ClientsController : Controller
         {
             return NotFound();
         }
+
         LoadServices(client.Service);
         return View(client);
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -146,6 +155,7 @@ public class ClientsController : Controller
 
         if (!ModelState.IsValid)
         {
+            LoadServices(client.Service);
             return View(client);
         }
 
@@ -158,22 +168,20 @@ public class ClientsController : Controller
                 return NotFound();
             }
 
-            TempData["Success"] =
-                "Данните на клиента са обновени успешно!";
+            TempData["Success"] = "Данните на клиента са обновени успешно!";
 
             return RedirectToAction(nameof(Index));
         }
-        catch (SqliteException ex)
-            when (ex.SqliteErrorCode == 19)
+        catch (SqliteException ex) when (ex.SqliteErrorCode == 19)
         {
             ModelState.AddModelError(
                 string.Empty,
                 "Вече съществува клиент с това име или телефон.");
 
+            LoadServices(client.Service);
             return View(client);
         }
     }
-
 
     [HttpGet]
     public IActionResult Delete(int id)
@@ -184,10 +192,10 @@ public class ClientsController : Controller
         {
             return NotFound();
         }
+
         LoadServices(client.Service);
         return View(client);
     }
-
 
     [HttpPost]
     [ActionName("Delete")]
@@ -201,11 +209,8 @@ public class ClientsController : Controller
             return NotFound();
         }
 
-        TempData["Success"] =
-            "Клиентът е изтрит успешно!";
+        TempData["Success"] = "Клиентът е изтрит успешно!";
 
         return RedirectToAction(nameof(Index));
     }
-    
-
 }

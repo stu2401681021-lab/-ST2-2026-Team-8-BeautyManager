@@ -4,6 +4,66 @@
     ViewData["Title"] = "AI асистент";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+    .ai-formatted-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .ai-formatted-content ul, .ai-formatted-content ol {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .ai-formatted-content table {
+        width: 100%;
+        margin-top: 0.75rem;
+        margin-bottom: 1rem;
+        border-collapse: collapse;
+        background-color: #ffffff;
+    }
+
+    .ai-formatted-content th, .ai-formatted-content td {
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        text-align: left;
+    }
+
+    .ai-formatted-content th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .ai-formatted-content blockquote {
+        border-left: 4px solid #ec4899;
+        padding-left: 1rem;
+        color: #6c757d;
+        margin: 1rem 0;
+    }
+
+    pre code.hljs {
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        font-size: 0.875rem;
+    }
+
+    .json-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        background: #8b5cf6;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+</style>
+
 <div class="row justify-content-center">
     <div class="col-lg-10">
 
@@ -39,7 +99,6 @@
             </div>
         </div>
 
-       
         <div class="card shadow-sm border-0 rounded-4 mb-4">
             <div class="card-body p-4">
                 <form method="post" asp-action="Index" id="aiForm">
@@ -77,23 +136,30 @@
 
         @if (!string.IsNullOrEmpty(Model?.Error))
         {
-            <div class="alert alert-danger border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 p-3" role="alert">
-                <span class="fs-4">⚠️</span>
+            <div class="alert alert-danger border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 p-3 mb-4" role="alert">
+                <span class="fs-4">
+                    ⚠️
+                    </span>
                 <div>
                     <strong class="d-block">Възникна грешка:</strong>
                     <span>@Model.Error</span>
                 </div>
             </div>
         }
+
         @if (!string.IsNullOrEmpty(Model?.Answer))
         {
-            <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="card shadow border-0 rounded-4 overflow-hidden mb-4">
                 <div class="card-header bg-success text-white py-3 px-4 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                        <span>💬</span> Отговор от AI
+                        <span>
+                            💬
+                        </span> 
+                        Отговор от AI
                     </h5>
 
                     <button type="button"
+                            id="copyBtn"
                             class="btn btn-sm btn-light rounded-pill px-3 fw-semibold"
                             onclick="copyAnswer()">
                         📋 Копирай
@@ -101,10 +167,8 @@
                 </div>
 
                 <div class="card-body p-4 bg-light">
-                    <div id="aiAnswerText"
-                         class="p-3 bg-white rounded-3 border shadow-sm"
-                         style="white-space:pre-wrap;font-family:inherit;line-height:1.6;">
-                        @Model.Answer
+                    <div id="rawAnswer" style="display:none;">@Model.Answer</div>
+                    <div id="aiAnswerFormatted" class="p-4 bg-white rounded-3 border shadow-sm ai-formatted-content">
                     </div>
                 </div>
             </div>
@@ -116,52 +180,91 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-  
         function setPrompt(text) {
             var textarea = document.getElementById('questionInput');
-            textarea.value = text;
-            updateCounter();
-            textarea.focus();
+            if (textarea) {
+                textarea.value = text;
+                updateCounter();
+                textarea.focus();
+            }
         }
 
- 
         function updateCounter() {
             var textarea = document.getElementById('questionInput');
             var counter = document.getElementById('charCounter');
-            counter.innerText = textarea.value.length + ' символа';
+            if (textarea && counter) {
+                counter.innerText = textarea.value.length + ' символа';
+            }
         }
 
-                document.getElementById('aiForm').addEventListener('submit', function (e) {
-            var textarea = document.getElementById('questionInput');
+        var aiForm = document.getElementById('aiForm');
+        if (aiForm) {
+            aiForm.addEventListener('submit', function (e) {
+                var textarea = document.getElementById('questionInput');
 
-            if (textarea && textarea.value.trim() !== '') {
-                document.getElementById('loadingSpinner').style.display = 'block';
+                if (textarea && textarea.value.trim() !== '') {
+                    document.getElementById('loadingSpinner').style.display = 'block';
 
-                var btn = document.getElementById('submitBtn');
-                btn.classList.add('disabled');
-                btn.innerHTML = 'Зареждане...';
+                    var btn = document.getElementById('submitBtn');
+                    btn.classList.add('disabled');
+                    btn.innerHTML = 'Зареждане...';
+                }
+            });
+        }
+
+        function copyAnswer() {
+            var rawElement = document.getElementById('rawAnswer');
+            if (!rawElement) return;
+
+            navigator.clipboard.writeText(rawElement.innerText).then(function () {
+                var copyBtn = document.getElementById('copyBtn');
+                var originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '✅ Копирано!';
+                setTimeout(function () {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCounter();
+
+            var rawAnswerEl = document.getElementById('rawAnswer');
+            var formattedEl = document.getElementById('aiAnswerFormatted');
+
+            if (rawAnswerEl && formattedEl) {
+                var rawText = rawAnswerEl.innerText.trim();
+
+                try {
+                    var parsedJson = JSON.parse(rawText);
+                    var prettyJson = JSON.stringify(parsedJson, null, 2);
+                    var highlightedJson = hljs.highlight(prettyJson, { language: 'json' }).value;
+
+                    formattedEl.innerHTML =
+                        '<span class="json-badge">Генерирана JSON Заявка</span>' +
+                        '<pre class="m-0"><code class="hljs language-json">' + highlightedJson + '</code></pre>';
+                    return;
+                } catch (e) {
+                }
+
+                if (typeof marked !== 'undefined') {
+                    marked.setOptions({
+                        highlight: function (code, lang) {
+                            var language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                            return hljs.highlight(code, { language: language }).value;
+                        },
+                        breaks: true
+                    });
+
+                    formattedEl.innerHTML = marked.parse(rawText);
+
+                    formattedEl.querySelectorAll('pre code').forEach(function (block) {
+                        hljs.highlightElement(block);
+                    });
+                } else {
+                    formattedEl.innerText = rawText;
+                }
             }
         });
-
-        function copyAnswer() {
-            var answerText = document.getElementById('aiAnswerText').innerText;
-
-            navigator.clipboard.writeText(answerText).then(function () {
-                alert('Отговорът беше копиран успешно!');
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', updateCounter);
-
-       
-        function copyAnswer() {
-            var answerText = document.getElementById('aiAnswerText').innerText;
-            navigator.clipboard.writeText(answerText).then(function () {
-                alert('Отговорът беше копиран успешно!');
-            });
-        }
-
-    
-        document.addEventListener('DOMContentLoaded', updateCounter);
     </script>
 }

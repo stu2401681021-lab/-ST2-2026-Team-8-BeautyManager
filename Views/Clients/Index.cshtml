@@ -20,8 +20,6 @@
     </a>
 </div>
 
-
-
 <div class="card shadow-sm mb-4">
     <div class="card-body">
 
@@ -57,13 +55,11 @@
     </div>
 </div>
 
-
-
 <div class="card shadow-sm">
     <div class="card-body">
 
         <h5 class="mb-3">
-            Клиенти (@Model.Count)
+            Клиенти (@ViewBag.TotalItems)
         </h5>
 
         <div class="table-responsive">
@@ -116,7 +112,6 @@
                                     @(client.Specialist ?? "-")
                                 </td>
 
-
                                 <td>
                                     <div class="d-flex gap-2">
 
@@ -145,6 +140,61 @@
             </table>
 
         </div>
+
+        <!-- Странициране -->
+        @if ((int)ViewBag.TotalPages > 0)
+        {
+            <div class="d-flex justify-content-center
+                        align-items-center flex-wrap gap-2 mt-4">
+
+                @if ((int)ViewBag.CurrentPage > 1)
+                {
+                    <a asp-controller="Clients"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="1"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        &laquo; Първа
+                    </a>
+
+                    <a asp-controller="Clients"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="@((int)ViewBag.CurrentPage - 1)"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        &larr; Предишна
+                    </a>
+                }
+
+                <span class="mx-2">
+                    Страница @ViewBag.CurrentPage от @ViewBag.TotalPages
+                </span>
+
+                @if ((int)ViewBag.CurrentPage < (int)ViewBag.TotalPages)
+                {
+                    <a asp-controller="Clients"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="@((int)ViewBag.CurrentPage + 1)"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        Следваща &rarr;
+                    </a>
+
+                    <a asp-controller="Clients"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="@ViewBag.TotalPages"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        Последна &raquo;
+                    </a>
+                }
+
+            </div>
+        }
 
     </div>
 </div>

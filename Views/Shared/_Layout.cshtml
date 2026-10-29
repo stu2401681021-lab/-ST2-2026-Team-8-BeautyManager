@@ -10,9 +10,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
-<body class="beauty-app">
+<body class="beauty-app d-flex flex-column min-vh-100">
 
-    <header>
+    <a class="visually-hidden-focusable p-2 m-2 btn btn-primary position-absolute top-0 start-0 z-3" href="#main-content">
+        Премини към съдържанието
+    </a>
+
+    <header class="sticky-top bg-white">
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
 
@@ -21,47 +25,63 @@
                 </a>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @{
+                        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                    }
                     <ul class="navbar-nav flex-grow-1 ms-3">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Clients" asp-action="Index">
+                            <a class="nav-link text-dark @(currentController == "Clients" ? "fw-bold border-bottom border-primary border-2" : "")"
+                               asp-controller="Clients" asp-action="Index">
                                 Клиенти
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">
+                            <a class="nav-link text-dark @(currentController == "Employees" ? "fw-bold border-bottom border-primary border-2" : "")"
+                               asp-controller="Employees" asp-action="Index">
                                 Служители
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">
+                            <a class="nav-link text-dark @(currentController == "Services" ? "fw-bold border-bottom border-primary border-2" : "")"
+                               asp-controller="Services" asp-action="Index">
                                 Услуги
                             </a>
                         </li>
-             
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark fw-bold text-primary" asp-controller="AI" asp-action="Index">
+                            <a class="nav-link text-dark fw-bold text-primary @(currentController == "AI" ? "border-bottom border-primary border-2" : "")"
+                               asp-controller="AI" asp-action="Index">
                                 🤖 AI Асистент
                             </a>
                         </li>
                     </ul>
 
                     <div class="d-flex gap-2">
-                        <a class="btn btn-outline-primary" asp-controller="Clients" asp-action="Create">
-                            + Нов клиент
-                        </a>
-                        <a class="btn btn-primary" asp-controller="Employees" asp-action="Create">
-                            + Нов служител
-                        </a>
-                        <a asp-controller="Services" asp-action="Create" class="btn btn-outline-primary ms-2">
-                            + Нова услуга
-                        </a>
+                        @if (currentController != "Clients")
+                        {
+                            <a class="btn btn-outline-primary" asp-controller="Clients" asp-action="Create">
+                                + Нов клиент
+                            </a>
+                        }
+                        @if (currentController != "Employees")
+                        {
+                            <a class="btn btn-primary" asp-controller="Employees" asp-action="Create">
+                                + Нов служител
+                            </a>
+                        }
+                        @if (currentController != "Services")
+                        {
+                            <a asp-controller="Services" asp-action="Create" class="btn btn-outline-primary">
+                                + Нова услуга
+                            </a>
+                        }
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container app-container">
+    <div class="container app-container flex-grow-1">
 
         <div class="welcome-banner">
             <div>
@@ -84,17 +104,20 @@
             </div>
         </div>
 
-        <main role="main" class="pb-4 app-main">
+        <main id="main-content" role="main" class="pb-4 app-main">
 
             @if (TempData["Message"] is string message)
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @message
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Затвори">
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Затвори"></button>
+                </div>
+            }
+            @if (TempData["Error"] is string error)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @error
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Затвори"></button>
                 </div>
             }
 
@@ -103,7 +126,7 @@
         </main>
     </div>
 
-    <footer class="beauty-footer text-muted small py-4 text-center">
+    <footer class="beauty-footer text-muted small py-4 text-center mt-auto">
         BeautyManager · Team 8
     </footer>
 

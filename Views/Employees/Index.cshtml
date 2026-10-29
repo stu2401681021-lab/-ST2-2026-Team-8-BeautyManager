@@ -1,48 +1,158 @@
 ﻿@model IEnumerable<BeautyManager.Models.Employee>
+
 @{
-	ViewData["Title"] = "Служители";
+    ViewData["Title"] = "Служители";
+    string filter = ViewBag.Filter as string ?? "";
 }
-<h1>Служители</h1>
-<p><a class="btn btn-primary" asp-action="Create">Добави</a></p>
-<form method="get" class="d-flex gap-2 mb-3">
-	<input name="filter" value="@ViewBag.Filter" class="form-control" placeholder="Търсене" />
-	<button class="btn btn-outline-primary">Търси</button>
-	<a asp-action="Index" class="btn btn-outline-secondary">Изчисти</a>
-</form>
-<div class="table-responsive">
-	<table class="table table-striped">
-		<thead><tr><th>Име</th><th>Специалност</th><th>Телефон</th><th>Действия</th></tr></thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
 
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Specialty</td>
-                    <td>@item.Phone</td>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Служители</h1>
+        <p class="text-muted mb-0">
+            Преглед и управление на служителите в BeautyManager
+        </p>
+    </div>
 
-                    <td class="text-nowrap">
-                        <a asp-action="Details"
-                           asp-route-id="@item.Id"
-                           class="btn btn-sm btn-outline-primary">
-                            Преглед
-                        </a>
+    <a class="btn btn-primary" asp-action="Create">
+        + Добави служител
+    </a>
+</div>
 
-                        <a asp-action="Edit"
-                           asp-route-id="@item.Id"
-                           class="btn btn-sm btn-outline-primary">
-                            Редакция
-                        </a>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index">
+            <label class="form-label">Търсене на служител</label>
 
-                        <a asp-action="Delete"
-                           asp-route-id="@item.Id"
-                           class="btn btn-sm btn-outline-danger">
-                            Изтрий
-                        </a>
-                    </td>
-                </tr>
+            <div class="input-group">
+                <input name="filter"
+                       value="@filter"
+                       class="form-control"
+                       placeholder="Име, специалност, телефон..." />
 
-			}
-		</tbody>
-	</table>
+                <button type="submit" class="btn btn-primary">
+                    Търси
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Изчисти
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="mb-3">
+            Служители (@ViewBag.TotalItems)
+        </h5>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Име</th>
+                        <th>Специалност</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4"
+                                class="text-center text-muted py-4">
+                                Няма намерени служители.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Specialty</td>
+                                <td>@item.Phone</td>
+
+                                <td class="text-nowrap">
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Преглед
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Редакция
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Изтрий
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if ((int)ViewBag.TotalPages > 0)
+        {
+            <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 mt-4">
+
+                @if ((int)ViewBag.CurrentPage > 1)
+                {
+                    <a asp-action="Index"
+                       asp-route-filter="@filter"
+                       asp-route-page="1"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        &laquo; Първа
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-filter="@filter"
+                       asp-route-page="@((int)ViewBag.CurrentPage - 1)"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        &larr; Предишна
+                    </a>
+                }
+
+                <span class="mx-2">
+                    Страница @ViewBag.CurrentPage от @ViewBag.TotalPages
+                </span>
+
+                @if ((int)ViewBag.CurrentPage < (int)ViewBag.TotalPages)
+                {
+                    <a asp-action="Index"
+                       asp-route-filter="@filter"
+                       asp-route-page="@((int)ViewBag.CurrentPage + 1)"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        Следваща &rarr;
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-filter="@filter"
+                       asp-route-page="@ViewBag.TotalPages"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       class="btn btn-outline-primary">
+                        Последна &raquo;
+                    </a>
+                }
+
+            </div>
+        }
+
+    </div>
 </div>
