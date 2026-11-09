@@ -1,0 +1,43 @@
+[1mdiff --git a/Security/AiAssistant.cs b/Security/AiAssistant.cs[m
+[1mindex 1b6601e..5f28270 100644[m
+[1m--- a/Security/AiAssistant.cs[m
+[1m+++ b/Security/AiAssistant.cs[m
+[36m@@ -1,36 +1 @@[m
+[31m-﻿using System.Net.Http.Headers;[m
+[31m-using System.Text;[m
+[31m-using System.Text.Json;[m
+[31m-namespace BeautyManager.Services;[m
+[31m-[m
+[31m-public sealed class AiAssistant[m
+[31m-{[m
+[31m-    private readonly HttpClient _http;[m
+[31m-    private readonly IConfiguration _config;[m
+[31m-    public AiAssistant(HttpClient http, IConfiguration config) { _http = http; _config = config; }[m
+[31m-[m
+[31m-    public async Task<string> AskAsync(string question, CancellationToken ct)[m
+[31m-    {[m
+[31m-        var key = _config["Ai:ApiKey"];[m
+[31m-        if (string.IsNullOrWhiteSpace(key)) throw new InvalidOperationException("AI не е конфигуриран. Задайте Ai__ApiKey като environment variable.");[m
+[31m-        var endpoint = _config["Ai:Endpoint"] ?? "https://api.openai.com/v1/chat/completions";[m
+[31m-        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps)[m
+[31m-            throw new InvalidOperationException("AI endpoint трябва да е валиден HTTPS адрес.");[m
+[31m-        var payload = new[m
+[31m-        {[m
+[31m-            model = _config["Ai:Model"] ?? "gpt-4o-mini",[m
+[31m-            messages = new[] {[m
+[31m-                new { role = "system", content = "Ти си учтив помощник на салон за красота BeautyManager. Отговаряй на български. Не твърди, че знаеш свободни часове или цени, ако не са предоставени. Не поставяй медицински диагнози." },[m
+[31m-                new { role = "user", content = question }[m
+[31m-            },[m
+[31m-            max_tokens = 350[m
+[31m-        };[m
+[31m-        using var request = new HttpRequestMessage(HttpMethod.Post, uri);[m
+[31m-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);[m
+[31m-        request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");[m
+[31m-        using var response = await _http.SendAsync(request, ct);[m
+[31m-        if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"AI услугата върна HTTP {(int)response.StatusCode}. Проверете настройките и квотата.");[m
+[31m-        using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));[m
+[31m-        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "Няма отговор.";[m
+[31m-    }[m
+[31m-}[m
+[32m+[m[32m﻿[m
+\ No newline at end of file[m

@@ -41,7 +41,7 @@ public sealed class AIController : Controller
             var services = _repositoryFactory.Services.GetAll();
             var employees = _repositoryFactory.Employees.GetAll();
 
-            var servicesList = string.Join("\n", services.Select(s => $"- {s.Name} ({s.Category}): {s.Price} лв., времетраене: {s.DurationMinutes} мин."));
+            var servicesList = string.Join("\n", services.Select(s => $"- {s.Name} ({s.Category}): {s.Price} euro, времетраене: {s.DurationMinutes} мин."));
             var employeesList = string.Join("\n", employees.Select(e => $"- {e.Name} - {e.Specialty} (Тел: {e.Phone})"));
 
             string promptWithContext =
